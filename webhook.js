@@ -156,8 +156,8 @@ app.post('/ai', (req, res) => {
         console.log('*** weather ***');
         let json = JSON.parse(body);
         console.log(json);
-        let tempF = (json.main.temp * 9/5 - 459.67) >>> 0;
-        let tempC = (json.main.temp - 273.15) >>> 0;
+        let tempF = ~~(json.main.temp * 9/5 - 459.67);
+        let tempC = ~~(json.main.temp - 273.15);
         let msg = 'The current condition in ' + json.name + ' is ' + json.weather[0].description + ' and the temperature is ' + tempF + ' ℉ (' +tempC+ ' ℃).'
         return res.json({
           speech: msg,
