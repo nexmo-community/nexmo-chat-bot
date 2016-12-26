@@ -10,7 +10,7 @@ To chat from Facebook Messenger, you can either chat from:
 - web at [m.me/nexmoapi](https://m.me/nexmoapi) or
 - mobile Messenger app: look for @nexmoapi or scan this Messenger code with the app. ([How?](https://www.facebook.com/help/messenger-app/441652809360083))
 
-![Facebook scan code](https://github.com/nexmo-community/nexmo-chat-bot/blob/master/public/images/messenger-code.jpg)
+![Facebook scan code](https://github.com/nexmo-community/nexmo-chat-bot/blob/master/images/messenger-code.jpg)
 
 ## Create Your Own Chat Bots with Nexmo
 
