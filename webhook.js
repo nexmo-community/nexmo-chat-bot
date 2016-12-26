@@ -123,7 +123,7 @@ app.post('/ai', (req, res) => {
 
   if (req.body.result.action === 'horoscope') {
     let sign = req.body.result.parameters['horoscope-sign'];
-    let restUrl = 'http://theastrologer-api.herokuapp.com/api/horoscope/' +sign+ '/today';
+    let restUrl = 'http://widgets.fabulously40.com/horoscope.json?sign=' +sign;
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
@@ -131,7 +131,7 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(body);
         console.log(json.horoscope);
         // escape unicode
-        let decodedResult = JSON.parse('"' + json.horoscope + '"')
+        let decodedResult = JSON.parse('"' + json.horoscope.horoscope + '"')
         return res.json({
           speech: decodedResult,
           displayText: '⭐️ ' + decodedResult,
