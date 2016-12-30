@@ -1,0 +1,133 @@
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+html {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 2em;
+  font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+  font-weight: 300;
+  background-color: #0a355d;
+  background: #0a355d url(../images/background.png) 0 0 no-repeat;
+  background-size: cover;
+  color: #fff;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100%;
+}
+.flex-row {
+  width: 85%;
+  margin: 0 auto;
+}
+#main {
+  flex: 1;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  text-rendering: optimizeLegibility;
+}
+footer {
+  margin-top: auto;
+  text-align: right;
+}
+footer a {
+  color: #f7d51b;
+}
+header {
+  color: #fff;
+}
+header h1 {
+  font-family: 'Alfa Slab One';
+  font-size: 2.4rem;
+  font-weight: normal;
+}
+h1 span {
+  font-size: 0.7em;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  padding: .25em 1em;
+  color: #0a355d;
+  display: inline-block;
+  transform: rotate(-8deg);
+}
+
+/* Flex column layout */
+
+#main {
+	display: -ms-flex;
+	display: -webkit-flex;
+	display: flex;
+  margin-top: 1em;
+}
+
+#main > .flex-col:first-child {
+	flex: 2 0px;
+}
+#main > .flex-col {
+	flex: 3 0px;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+.logo {
+  width: 120px;
+}
+.scan-code {
+  width: 80%;
+  display: block;
+  margin: auto
+}
+.user-display {
+  position: relative;
+}
+.user-display div {
+  width: 100px;
+  height: 100px;
+  background: trasnparent url() 0 0 no-repeat;
+  background-size: contain;
+  position: absolute;
+  text-align: right;
+}
+.user-display div.avatar {
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.75);
+}
+.user-display div::after {
+  content: attr(title);
+  position: relative;
+  font-size: 0.7em;
+  top: 75px;
+}
+.poof {
+  animation: poof 60s ease-in 0s 1;
+}
+@keyframes poof {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  1% {
+    transform: scale(1.2);
+  }
+  2% {
+    transform: scale(1);
+  }
+  3% {
+    transform: scale(1.2);
+  }
+  4% {
+    transform: scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

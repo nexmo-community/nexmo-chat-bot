@@ -21,11 +21,17 @@ const APIAI_URL = 'https://api.api.ai/v1/query';
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const ejs = require('ejs');
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set('views', __dirname + '/views');
+app.set('view engine', 'html');
+app.engine('html', ejs.renderFile);
+app.use(express.static(__dirname + '/public'));
 
-const server = app.listen(process.env.PORT || 4044, () => {
+const server = app.listen(process.env.PORT || 5000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
 
@@ -43,12 +49,54 @@ const nexmo = new Nexmo({
 const apiai = require('apiai');
 const apiaiApp = apiai(APIAI_TOKEN);
 
+// Web UI (Optional)
+
+app.get('/', function (req, res) {
+  res.render('index');
+});
+
+// socket.io - for Web UI (Optional)
+const socketio = require('socket.io');
+
+const io = socketio(server);
+io.on('connection', (socket) => {
+  console.log('Socket connected');
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected');
+  });
+});
 
 // Handle both GET and POST requests
 
 app.post('/message', (req, res) => {
   console.log('*** Inbound to Nexmo ***');
-  console.log(req.body);
+  //console.log(req.body);
+  // FB response
+  // {   user_id: '1284850101589147',
+  //    user_name: 'Tomomi Imura',
+  //    message_timestamp: '2016-12-28 22:54:15',
+  //    from: 'ott:fbmessenger:1284850101589147',
+  //    message_id: 'mid.1482965653850:0ca09da421',
+  //    to: 'ott:fbmessenger:301125206951687',
+  //    text: 'yo',
+  //    type: 'text',
+  //    user_img: 'https://scontent.xx.fbcdn.net/v/t1.0-1/392074_4093360926879_883458610_n.jpg?oh=eb5b28fc079d0d5788bdf360ad306077&oe=58F2A4D1' }
+
+  // SMS response
+  // { msisdn: '14159873202',
+  //   to: '18187970001',
+  //   messageId: '0B000000280E4CBE',
+  //   text: 'Yo',
+  //   type: 'text',
+  //   keyword: 'YO',
+  //   'message-timestamp': '2016-12-28 23:02:15' }
+
+  // Socket.io
+  if(req.body.type === 'text' && req.body.user_id){
+    io.emit('user', {username:req.body.user_name, avatar:req.body.user_img});
+  } else if (req.body.msisdn) {
+    io.emit('user', {msisdn:req.body.msisdn});
+  }
 
   // Get a reply from api.ai
   getReplyFromApiai(req.body);
@@ -122,12 +170,13 @@ app.post('/ai', (req, res) => {
   console.log(req.body.result);
 
   if (req.body.result.action === 'horoscope') {
+    console.log('*** horoscope ***');
     let sign = req.body.result.parameters['horoscope-sign'];
     let restUrl = 'http://widgets.fabulously40.com/horoscope.json?sign=' +sign;
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
-        console.log('*** horoscope ***');
+
         let json = JSON.parse(body);
         console.log(json.horoscope);
         // escape unicode
@@ -148,12 +197,12 @@ app.post('/ai', (req, res) => {
       }
     })
   } else if (req.body.result.action === 'weather') {
+    console.log('*** weather ***');
     let city = req.body.result.parameters['geo-city'];
     let restUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID='+WEATHER_API_KEY+'&q='+city;
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
-        console.log('*** weather ***');
         let json = JSON.parse(body);
         console.log(json);
         let tempF = ~~(json.main.temp * 9/5 - 459.67);
