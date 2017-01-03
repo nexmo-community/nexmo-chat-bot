@@ -115,7 +115,7 @@ app.post('/receipt', (req, res) => {
 /* GET query from API.ai */
 function getReplyFromApiai(params) {
 
-  var request = apiaiApp.textRequest(params.text, {
+  let request = apiaiApp.textRequest(params.text, {
     sessionId: 'jamiecat'
   });
 
