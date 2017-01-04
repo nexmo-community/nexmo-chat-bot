@@ -49,22 +49,17 @@ const nexmo = new Nexmo({
 const apiai = require('apiai');
 const apiaiApp = apiai(APIAI_TOKEN);
 
+// socket.io - for Web UI (Optional)
+const socketio = require('socket.io');
+const io = socketio(server);
+
+
 // Web UI (Optional)
 
 app.get('/', function (req, res) {
   res.render('index');
 });
 
-// socket.io - for Web UI (Optional)
-const socketio = require('socket.io');
-
-const io = socketio(server);
-io.on('connection', (socket) => {
-  console.log('Socket connected');
-  socket.on('disconnect', () => {
-    console.log('Socket disconnected');
-  });
-});
 
 // Handle both GET and POST requests
 
@@ -93,9 +88,13 @@ app.post('/message', (req, res) => {
 
   // Socket.io
   if(req.body.type === 'text' && req.body.user_id){
-    io.emit('user', {username:req.body.user_name, avatar:req.body.user_img});
+    io.on('connection', (socket) => {
+      io.emit('user', {username:req.body.user_name, avatar:req.body.user_img});
+    });
   } else if (req.body.msisdn) {
-    io.emit('user', {msisdn:req.body.msisdn});
+    io.on('connection', (socket) => {
+      io.emit('user', {msisdn:req.body.msisdn});
+    });
   }
 
   // Get a reply from api.ai
