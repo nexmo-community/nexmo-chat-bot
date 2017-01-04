@@ -53,7 +53,6 @@ const apiaiApp = apiai(APIAI_TOKEN);
 const socketio = require('socket.io');
 const io = socketio(server);
 
-
 // Web UI (Optional)
 
 app.get('/', function (req, res) {
@@ -67,7 +66,7 @@ app.post('/message', (req, res) => {
   console.log('*** Inbound to Nexmo ***');
   //console.log(req.body);
   // FB response
-  // {   user_id: '1284850101589147',
+  // {   user_id: '1284850101589xxx',
   //    user_name: 'Tomomi Imura',
   //    message_timestamp: '2016-12-28 22:54:15',
   //    from: 'ott:fbmessenger:1284850101589147',
@@ -78,7 +77,7 @@ app.post('/message', (req, res) => {
   //    user_img: 'https://scontent.xx.fbcdn.net/v/t1.0-1/392074_4093360926879_883458610_n.jpg?oh=eb5b28fc079d0d5788bdf360ad306077&oe=58F2A4D1' }
 
   // SMS response
-  // { msisdn: '14159873202',
+  // { msisdn: '14155553202',
   //   to: '18187970001',
   //   messageId: '0B000000280E4CBE',
   //   text: 'Yo',
@@ -88,13 +87,9 @@ app.post('/message', (req, res) => {
 
   // Socket.io
   if(req.body.type === 'text' && req.body.user_id){
-    io.on('connection', (socket) => {
-      io.emit('user', {username:req.body.user_name, avatar:req.body.user_img});
-    });
+    io.emit('user', {username:req.body.user_name, avatar:req.body.user_img});
   } else if (req.body.msisdn) {
-    io.on('connection', (socket) => {
-      io.emit('user', {msisdn:req.body.msisdn});
-    });
+    io.emit('user', {msisdn:req.body.msisdn});
   }
 
   // Get a reply from api.ai
@@ -166,11 +161,13 @@ function postMessage(user, message) {
 
 app.post('/ai', (req, res) => {
   console.log('*** Webhook for api.ai query ***');
-  console.log(req.body.result);
+  let result = req.body.result;
 
-  if (req.body.result.action === 'horoscope') {
+  if (result.action === 'horoscope') {
     console.log('*** horoscope ***');
-    let sign = req.body.result.parameters['horoscope-sign'];
+    if(!result.parameters['horoscope-sign']) return;
+
+    let sign = result.parameters['horoscope-sign'];
     let restUrl = 'http://widgets.fabulously40.com/horoscope.json?sign=' +sign;
 
     request.get(restUrl, (err, response, body) => {
@@ -195,9 +192,11 @@ app.post('/ai', (req, res) => {
         });
       }
     })
-  } else if (req.body.result.action === 'weather') {
+  } else if (result.action === 'weather') {
     console.log('*** weather ***');
-    let city = req.body.result.parameters['geo-city'];
+    if(!result.parameters['geo-city']) return;
+
+    let city = result.parameters['geo-city'];
     let restUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID='+WEATHER_API_KEY+'&q='+city;
 
     request.get(restUrl, (err, response, body) => {
