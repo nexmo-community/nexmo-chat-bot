@@ -86,11 +86,9 @@ app.post('/message', (req, res) => {
   //   'message-timestamp': '2016-12-28 23:02:15' }
 
   // Socket.io
-  if(req.body.type === 'text' && req.body.user_id){
-    io.emit('user', {username:req.body.user_name, avatar:req.body.user_img});
-  } else if (req.body.msisdn) {
-    io.emit('user', {msisdn:req.body.msisdn});
-  }
+  if(req.body.type === 'text' || req.body.msisdn){
+    io.emit('user', req.body);
+  } 
 
   // Get a reply from api.ai
   getReplyFromApiai(req.body);

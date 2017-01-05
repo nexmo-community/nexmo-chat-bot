@@ -84,26 +84,42 @@ p {
   margin: auto
 }
 .user-display {
-  position: relative;
+  margin-left: 2em;
+  height: 100%;
+  overflow-y: scroll;
 }
 .user-display div {
   width: 100px;
   height: 100px;
   background: trasnparent url() 0 0 no-repeat;
   background-size: contain;
-  position: absolute;
-  text-align: right;
+  margin: 1.5em 1em;
+  //position: absolute;
 }
 .user-display div.avatar {
   border-radius: 50%;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.75);
 }
-.user-display div::after {
-  content: attr(title);
+.user-display div::before {
+  content: attr(data-username);
   position: relative;
   font-size: 0.7em;
-  top: 75px;
+  top: 95px;
+  right: 0;
 }
+.user-display div::after {
+  content: attr(data-text);
+  padding: 0.5em 0.75em;
+  position: relative;
+  left: 120px;
+  top: -10px;
+  width: 300px;
+  height: 80px;
+  display: inline-block;
+  background: rgba(0, 0, 0, .5);
+  border-radius: 8px;
+}
+
 .poof {
   animation: poof 60s ease-in 0s 1;
 }
