@@ -87,11 +87,11 @@ app.post('/message', (req, res) => {
 
   // Socket.io
   if(req.body.type === 'text' || req.body.msisdn){
+    // Show in UI
     io.emit('user', req.body);
-  } 
-
-  // Get a reply from api.ai
-  getReplyFromApiai(req.body);
+    // Get a reply from api.ai
+    getReplyFromApiai(req.body);
+  }
 
   //res.send(req.body);
   res.status(200).end();
@@ -121,9 +121,7 @@ function getReplyFromApiai(params) {
             (err, responseData) => {if (err) {console.log(err)}}
           );
       } else { // Facebook etc.
-        if (params.type === 'text') {
-          postMessage(params.from, replyMessage);
-        }
+        postMessage(params.from, replyMessage);
       }
   });
 
