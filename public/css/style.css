@@ -119,6 +119,9 @@ p {
   background: rgba(0, 0, 0, .5);
   border-radius: 8px;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 
 .poof {
   animation: poof 60s ease-in 0s 1;
