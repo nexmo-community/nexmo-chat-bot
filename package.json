@@ -28,7 +28,7 @@
   "homepage": "https://github.com/nexmo-community/nexmo-bot-demo#readme",
   "dependencies": {
     "apiai": "^3.0.3",
-    "body-parser": "^1.15.2",
+    "body-parser": "^1.20.6",
     "ejs": "^2.5.5",
     "express": "^4.14.0",
     "nexmo": "^1.1.0",
